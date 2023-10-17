@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>test</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div id="nama-tamu"></div>
+	//NOTE LINK URL ?to=bagus+%26+budi
+    <script>
+        $(document).ready(function () {
+            const searchParams = new URLSearchParams(window.location.search);
+            const name = searchParams.has('to') ? searchParams.get('to') : '';
+
+            if (!name) {
+                $('#nama-tamu').remove();
+                return;
+            }
+
+            const div = $('<div class="m-2"><p class="mt-0 mb-1 mx-0 p-0 text-light">Kepada Yth Bapak/Ibu/Saudara/i</p><h2 class="text-light"></h2></div>');
+            div.find('h2').text(name);
+
+            $('#nama-tamu').append(div);
+        });
+    </script>
+</body>
+</html>
