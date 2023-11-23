@@ -3,22 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>test</title>
+    <title>Undangan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
 </head>
     <style>
 		@font-face {
 		  font-family: 'NamaFont';
-		  src: url('Arizonia-Regular.ttf') format('truetype');
+		  src: url('share/Arizonia-Regular.ttf') format('truetype');
 		}
 		@font-face {
 		  font-family: 'NamaFont1';
-		  src: url('Photograph.ttf') format('truetype');
+		  src: url('share/Photograph.ttf') format('truetype');
 		}
 		@font-face {
 		  font-family: 'NamaFont2';
-		  src: url('Honey-Carrot.ttf') format('truetype');
+		  src: url('share/Honey-Carrot.ttf') format('truetype');
 		}
 
         * { 
@@ -50,7 +50,7 @@
 			width: 100%;
 			position: fixed;
 			top:-70px;
-	 		background-image: url(imgFlower.png);
+	 		background-image: url(share/imgFlower.png);
 	 		background-size: 150px;
 	 		background-repeat: repeat-x; /* Pengulangan hanya sepanjang sumbu Y */
   			transform: rotate(-180deg);
@@ -61,7 +61,7 @@
 			width: 100%;
 			position: fixed;
 			top:-70px;
-	 		background-image: url(imgFlower.png);
+	 		background-image: url(share/imgFlower.png);
 	 		background-size: 150px;
 	 		background-repeat: repeat-x; /* Pengulangan hanya sepanjang sumbu Y */
   			background-position-x: 80px;
@@ -73,7 +73,7 @@
 			width: 100%;
 			position: fixed;
 			bottom:-70px;
-	 		background-image: url(imgFlower.png);
+	 		background-image: url(share/imgFlower.png);
 	 		background-size: 150px;
 	 		background-repeat: repeat-x; /* Pengulangan hanya sepanjang sumbu Y */
   			transform: rotate(-180deg);
@@ -84,7 +84,7 @@
 			width: 100%;
 			position: fixed;
 			bottom:-70px;
-	 		background-image: url(imgFlower.png);
+	 		background-image: url(share/imgFlower.png);
 	 		background-size: 150px;
 	 		background-repeat: repeat-x; /* Pengulangan hanya sepanjang sumbu Y */
   			background-position-x: 80px;
@@ -158,27 +158,27 @@
 			   
 	    			<div class="d-flex justify-content-center">
 						<div class="dvContainerAi">
-		    				<img class="img-fluid" src="imgAi.png">
+		    				<img class="img-fluid" src="share/imgAI.png">
 		    			</div>
 	    			</div>
 
-	    			<p id="target-date">Sabtu, 30 Desember 2023</p>
+	    			<p id="target-date"></p>
 
 					<div id="countdown" class="d-flex justify-content-center">
 						<div class="dvCountDown">
-			 				<div id="days">00</div>
+			 				<div id="days">--</div>
 	  						<div class="unit-label">Days</div>
 						</div>
 						<div class="dvCountDown">
-							<div id="hours">00</div>
+							<div id="hours">--</div>
 	  						<div class="unit-label">Hours</div>
 						</div>
 	 					<div class="dvCountDown">
-	 						<div id="minutes">00</div>
+	 						<div id="minutes">--</div>
 	  						<div class="unit-label">Minutes</div>
 	 					</div>
 	  					<div class="dvCountDown">
-	  						 <div id="seconds">00</div>
+	  						 <div id="seconds">--</div>
 	  						<div class="unit-label">Seconds</div>
 	  					</div>
 					</div>
@@ -226,30 +226,40 @@
             $('#nama-tamu').append(div);
         });
 
-	  // Your target date and time (replace with your desired date and time)
-	  const targetDate = new Date('2023-11-23T07:00:00');
-	  $('#target-date').text(targetDate.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
+	   // Your target date and time (replace with your desired date and time)
+	  const targetDate = new Date('2023-12-23T09:00:00');
+	  $('#target-date').text(targetDate.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}));
 
 	  function updateCountdown() {
 	    const currentDate = new Date();
 	    const timeDifference = targetDate - currentDate;
 
-	    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-	    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-	    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-	    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+	    if (timeDifference <= 0) {
+	      // Countdown reached zero, stop the interval
+	      clearInterval(interval);
+	      $('#days').text('0');
+	      $('#hours').text('0');
+	      $('#minutes').text('0');
+	      $('#seconds').text('0');
+	    } else {
+	      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+	      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+	      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
 
-	    $('#days').text(formatTime(days));
-	    $('#hours').text(formatTime(hours));
-	    $('#minutes').text(formatTime(minutes));
-	    $('#seconds').text(formatTime(seconds));
+	      $('#days').text(formatTime(days));
+	      $('#hours').text(formatTime(hours));
+	      $('#minutes').text(formatTime(minutes));
+	      $('#seconds').text(formatTime(seconds));
+	    }
 	  }
 
 	  function formatTime(time) {
-	    return time < 10 ? `0${time}` : time;
+	    return time < 10 ? `${time}` : time;
 	  }
 
-	  setInterval(updateCountdown, 1000);
+	  // Update countdown every second
+	  const interval = setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
