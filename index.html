@@ -3,10 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bagus Ganteng Nya Maulidiya</title>
+    <title>Bagus Ganteng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-   
+	<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
 </head>
     <style>
 		@font-face {
@@ -171,7 +172,19 @@
 		.card{
 			background: #FFC8F3;
 			box-shadow: 0 4px 8px rgba(255, 200, 243, 0.7);
-			border:none;
+
+		}
+		.btnLoct{
+			width:200px;
+			border-radius: 50px;
+			background: #603416;
+			color:white;
+		}
+		.btnLoct:hover{
+			width:200px;
+			border-radius: 50px;
+			background: #603416;
+			color:white;
 		}
     </style>
 <body>
@@ -186,11 +199,11 @@
     		
     		</div>
     		<div class="col-md-5 pt-5">
-    			<div class="panel pt-5">
+    			<div class="text-center pt-5">
 			    	<img data-aos="zoom-in-down" data-aos-duration="2000" src="share/bismillah.png" class="imgBismillah">
-			    	<p data-aos="zoom-in-left" data-aos-duration="2000" class="titleWedding">The Wedding Of</p>
-			    	<div data-aos="fade-right" data-aos-duration="2000">
-			    		 <p class="name mb-0">Lidiya & Bagus</p>
+			    	<p data-aos="zoom-in-up" data-aos-duration="2000" class="titleWedding">The Wedding Of</p>
+			    	<div data-aos="fade-down" data-aos-duration="2000">
+			    		 <p class="name mb-0">Lidya & Bagus</p>
 			    	</div>
 			   
 	    			<div data-aos="fade-up" data-aos-duration="2000" class="d-flex justify-content-center">
@@ -221,23 +234,23 @@
 					</div>
 	    		
 				</div>
-				<div class="panel" style="height:auto">
+				<div class="text-center mt-5 pt-5 mb-5 pb-5 " style="height:auto">
 					<p data-aos="fade-up" data-aos-duration="1000">Assalamu’alaikum wr.wb</p>
 					<p data-aos="fade-up" data-aos-duration="2000">Dengan memohon rahmat dan ridho Allah Subhanahu Wa Ta’ala, Insya Allah kami akan menyelenggarakan Acara Pernikahan :</p>
 					<div class="row">
-						<div class="col-12 d-flex justify-content-center" data-aos="fade-zoom" data-aos-duration="3000">
+						<div class="col-12 d-flex justify-content-center" data-aos="fade-down" data-aos-duration="3000">
 							<img class="img-fluid" style="width:30%" src="share/akhwat.png">
 							
 						</div>
 						<div class="col-12" data-aos="fade-up" data-aos-duration="1000">
-							<p class="nameDesc">Maulidiya Zahra Almasah</p>
+							<p class="nameDesc">Maulidya Zahra Almasah</p>
 							<p class="mb-0">Putri Pertama Dari</p>
 							<p>Bapak Fitriyadi & Ibu Farida Sakinah</p>
 						</div>
 					</div>
 					<p class="nameDesc" data-aos="fade-up" data-aos-duration="1000">&</p>
 					<div class="row">
-						<div class="col-12 d-flex justify-content-center"  data-aos="fade-left" data-aos-duration="1000">
+						<div class="col-12 d-flex justify-content-center"  data-aos="fade-up" data-aos-duration="1000">
 							<img class="img-fluid" style="width:30%" src="share/ikhwan.png">
 							
 						</div>
@@ -248,10 +261,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="panel mt-5 pt-5" style="height:auto">
+				<div class="text-center mt-5 pt-5 mb-5 pb-5 ">
 					<p class="name" data-aos="fade-up" data-aos-duration="1000">Save Date</p>
-					<div class="row justify-content-center mt-5">
-						<div class="col-md-8" data-aos="fade-left" data-aos-duration="1000">
+					<div class="row justify-content-center">
+						<div class="col-md-8" data-aos="fade-up" data-aos-duration="1000">
 							<div class="card p-2">
 								<p class="mb-0 nameDesc">Akad Nikah</p>
 								<div class="ps-3 mt-4" style="text-align: left;">
@@ -276,7 +289,7 @@
 					</div>
 
 					<div class="row justify-content-center mt-4">
-						<div class="col-md-8"  data-aos="fade-right" data-aos-duration="1000">
+						<div class="col-md-8"  data-aos="fade-up" data-aos-duration="1000">
 							<div class="card p-2">
 								<p class="mb-0 nameDesc">Resepsi</p>
 								<div class="ps-3 mt-4" style="text-align: left;">
@@ -297,33 +310,145 @@
 								</div>
 							</div>
 						</div>
+
 				
+					</div>
+					<div class="row justify-content-center mt-4">
+						<div class="col-md-8"  data-aos="fade-up" data-aos-duration="1000">
+							<div class="card p-0">
+								<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.406939739847!2d106.7238029!3d-6.341309100000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69ef4283b07417%3A0x24baacf529a21b4c!2sSaoeng%20Noempang%20Ngadem!5e0!3m2!1sid!2sid!4v1705287757250!5m2!1sid!2sid" style="border:0;width: 100%;border-radius:8px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+							</div>
+						</div>
+					</div>
+
+					<div class="row justify-content-center mt-4">
+						<div class="col-md-8"  data-aos="fade-up" data-aos-duration="1000">
+							<a class="btn btnLoct" href="https://maps.app.goo.gl/5b3iPUyB9dNQe9dK7" target="_blank">
+								<i class="fa-solid fa-location-dot me-3"></i>Lihat Lokasi
+							</a>
+						</div>
 					</div>
 					
 				</div>
-				<div class="panel">
-					<p>04</p>
+
+				<div class="mt-5 pt-5 mb-5 pb-5 text-center">
+					<p class="name" data-aos="fade-up" data-aos-duration="1000">Gallery</p>
+					<div class="row justify-content-center">
+						<div class="col-md-8"  data-aos="fade-up" data-aos-duration="1000">
+							<div class="card p-0" style="border: none;"> 
+								<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+	  								<div class="carousel-inner">
+	    								<div class="carousel-item active">
+	      									<img src="share/img1.jpeg" style="border-radius: 8px;" class="d-block w-100"  alt="...">
+	    								</div>
+	    								<div class="carousel-item">
+	      									<img src="share/img1.jpeg" style="border-radius: 8px;" class="d-block w-100" alt="...">
+	    								</div>
+	    								<div class="carousel-item">
+	      									<img src="share/img1.jpeg" style="border-radius: 8px;" class="d-block w-100"  alt="...">
+	    								</div>
+	  								</div>
+	  								<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+	    								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+	    								<span class="visually-hidden">Previous</span>
+	  								</button>
+	  								<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+	    								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+	    								<span class="visually-hidden">Next</span>
+	  								</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					
 				</div>
-				<div class="panel">
-					<p>05</p>
+				<div class="mt-5 pt-5 pb-5 text-center">
+					<i aria-hidden="true" style="color:#603416;font-size: 35px;" class="fas fa-gift"></i>
+
+					<p class="name" data-aos="fade-up" data-aos-duration="1000">Wedding Gift</p>
+					<div class="d-flex justify-content-center">
+						<p data-aos="fade-down" data-aos-duration="1000" style="width:70%">Do'a restu keluarga, sahabat, serta rekan-rekan semua di pernikahan kami sudah sangat cukup sebagai hadiah, tetapi jika memberi merupakan tanda kasih, kami dengan senang hati menerimanya dan tentunya semakin melengkapi kebahagiaan kami. </p>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-md-8"  data-aos="fade-up" data-aos-duration="1000">
+							<div class="card bg-white">
+								<div class="d-flex justify-content-center mt-4 mb-2">
+									<img class="img-fluid" style="width:20%" src="share/LogoBCA.png" />
+								</div>
+								<p class="mb-0">A/N Bagus Budi Pangestu</p>
+								<p><span id="textToCopy">1110179193</span> <i class="fa-regular fa-copy" id="copyButton" style="cursor:pointer"></i></p>
+							</div>
+						</div>
+					</div>
+
 				</div>
-				<div class="panel">
-					<p><div id="nama-tamu"></div></p>
+				<div class="mt-5 mb-5 pb-5 text-center">
+					<div class="d-flex justify-content-center">
+						<p data-aos="fade-down" data-aos-duration="1000" style="width:70%">Merupakan suatu kehormatan dan kebahagian bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa. </p>
+					</div>
+				
+					<p data-aos="fade-up" data-aos-duration="1000">Wassalamu'alaikum Warahmatullahi Wabarakatuh</p>
+					<p class="mb-0" data-aos="fade-down" data-aos-duration="1000">Kami Yang Berbahagia,</p>
+					<p data-aos="fade-up" data-aos-duration="1000">Keluarga Besar Kedua Mempelai</p>
+
+					<p class="name" data-aos="fade-down" data-aos-duration="1000">Lidya & Bagus</p>
+				</div>
+				
+
+
+				<div class="text-center" style="height:150px;">
+					<p>&copy; Bagus Bupe 2024</p>
 				</div>
     		</div>
     	</div>
 		
    </div>
 
+   <!-- Modal -->
+	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-fullscreen">
+	    <div class="modal-content">
+	      <div class="modal-body" style="background: #FEF0EF;">
+	      		<div class="row justify-content-center">
+					<div class="col-md-5">
+						<div class="text-center pt-3">
+			    			<img data-aos="zoom-in-down" data-aos-duration="2000" src="share/bismillah.png" class="imgBismillah">
+			    			<p data-aos="zoom-in-up" data-aos-duration="2000" class="titleWedding">The Wedding Of</p>
+			    			<div data-aos="fade-down" data-aos-duration="2000">
+			    		 		<p class="name mb-0">Lidya & Bagus</p>
+			    			</div>
+			   
+	    					<div data-aos="fade-up" data-aos-duration="2000" class="d-flex justify-content-center">
+								<div class="dvContainerAi">
+		    						<img class="img-fluid" src="share/imgAI.png">
+		    					</div>
+	    					</div>
+	    					<p><div id="nama-tamu"></div></p>
+	    					<p>Tanpa Mengurangi Rasa Hormat, Kami Mengundang Anda Untuk Hadir Di Acara Pernikahan Kami.</p>
+	    		 				<button type="button" class="btn btnLoct mt-3" data-bs-dismiss="modal"> 
+	    		 					<i class="fa-regular fa-envelope"></i> Buka Undangan
+	    		 				</button>
+						</div>
+					</div>
+				</div>
+	      </div> 
+	    </div>
+	  </div>
+	</div>
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <!--     NOTE LINK URL ?to=bagus+%26+budi -->
     <script>
         $(document).ready(function () {
+        	 $('#staticBackdrop').modal('show');
+
             const searchParams = new URLSearchParams(window.location.search);
             const name = searchParams.has('to') ? searchParams.get('to') : '';
 
@@ -374,6 +499,26 @@
 	  const interval = setInterval(updateCountdown, 1000);
 
 	    AOS.init();
+
+
+	  $("#copyButton").click(function(){
+                var textToCopy = $("#textToCopy").text();
+                copyToClipboard(textToCopy);
+            });
+
+            function copyToClipboard(text) {
+                var $tempInput = $("<input>");
+                $("body").append($tempInput);
+                $tempInput.val(text).select();
+                document.execCommand("copy");
+                $tempInput.remove();
+                Swal.fire({
+                icon: 'success',
+                title: 'Berhasil Di Copy',
+            });
+        }
+
+
     </script>
 </body>
 </html>
