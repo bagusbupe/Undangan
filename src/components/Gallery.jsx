@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const images = [
+const DEFAULT_IMAGES = [
   '/share/Image1.jpeg',
   '/share/Image2.jpeg',
   '/share/Image3.jpeg',
@@ -12,16 +12,19 @@ const images = [
   '/share/Image10.jpeg',
 ];
 
-export default function Gallery() {
+export default function Gallery({ images }) {
+  const list = images && images.length > 0 ? images : DEFAULT_IMAGES;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? list.length - 1 : prev - 1));
   };
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === list.length - 1 ? 0 : prev + 1));
   };
+
+  const displayIndex = currentIndex >= list.length ? 0 : currentIndex;
 
   return (
     <div className="mt-8 max-w-2xl mx-auto px-4">
@@ -32,8 +35,8 @@ export default function Gallery() {
       <div className="relative bg-white rounded-lg overflow-hidden shadow-lg">
         <div className="aspect-video bg-gray-200 flex items-center justify-center">
           <img
-            src={images[currentIndex]}
-            alt={`Gallery ${currentIndex + 1}`}
+            src={list[displayIndex]}
+            alt={`Gallery ${displayIndex + 1}`}
             className="w-full h-full object-cover"
           />
         </div>
@@ -58,18 +61,18 @@ export default function Gallery() {
 
         {/* Indicator */}
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
-          {currentIndex + 1} / {images.length}
+          {displayIndex + 1} / {list.length}
         </div>
       </div>
 
       {/* Thumbnails */}
       <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
-        {images.map((image, index) => (
+        {list.map((image, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
             className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden transition ${
-              currentIndex === index ? 'ring-2 ring-primary' : 'opacity-60'
+              displayIndex === index ? 'ring-2 ring-primary' : 'opacity-60'
             }`}
           >
             <img src={image} alt={`Thumb ${index + 1}`} className="w-full h-full object-cover" />

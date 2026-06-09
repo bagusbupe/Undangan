@@ -8,29 +8,23 @@ import WishList from '../components/WishList';
 import { formatWeddingDate } from '../utils/date';
 import { copyToClipboard } from '../utils/clipboard';
 
-export default function BaseTemplate({ data = null, shared = {}, ...props }) {
-  // support either a single `data` prop or individual props for backwards compatibility
-  const source = data || props || {};
+import { normalizeInvitationData } from '../utils/templateData';
+
+export default function BaseTemplate({ data: inputData = null, shared = {}, ...props }) {
+  const data = normalizeInvitationData(inputData || props);
 
   const {
-    coupleNames = { bride: '', groom: '' },
-    weddingDate = new Date(),
-    events = [],
-    gallery = [],
-    bankAccount = '',
-    bankRecipient = '',
-    bankName = '',
-    audioSrc = '',
-    venueMapSrc = '',
-    venueLink = '',
-    parents = { bride: '', groom: '' },
-    heroImage = '/share/imgAI.png',
-    brideImage = '/share/akhwat.png',
-    groomImage = '/share/ikhwan.png',
-    introText = "Dengan memohon rahmat dan ridho Allah Subhanahu Wa Ta'ala, Insya Allah kami akan menyelenggarakan Acara Pernikahan :",
-  } = source;
+    couple,
+    weddingDate,
+    events,
+    gallery,
+    venue,
+    gift,
+    assets,
+    introText,
+  } = data;
 
-  const formattedDate = formatWeddingDate(new Date(weddingDate));
+  const formattedDate = formatWeddingDate(weddingDate);
 
   return (
     <div className="min-h-screen bg-bg overflow-x-hidden">
@@ -41,14 +35,16 @@ export default function BaseTemplate({ data = null, shared = {}, ...props }) {
 
       <InvitationModal
         isOpen={true}
-        onClose={() => {}}
+        onClose={() => { }}
         onOpen={() => {
           const audio = document.querySelector('audio');
           if (audio) audio.play();
         }}
+        couple={couple}
+        heroImage={assets.heroImage}
       />
 
-      <AudioButton audioSrc={audioSrc} />
+      <AudioButton audioSrc={assets.audioSrc} />
 
       <main className="max-w-6xl mx-auto relative z-0">
         <div className="grid md:grid-cols-5 gap-4 p-4">
@@ -56,9 +52,9 @@ export default function BaseTemplate({ data = null, shared = {}, ...props }) {
             <div className="text-center">
               <img src="/share/bismillah.png" alt="Bismillah" className="w-64 mx-auto mb-4" />
               <p className="text-lg text-primary mb-2">The Wedding Of</p>
-              <h1 className="text-5xl md:text-6xl font-nameFont1 text-primary mb-4">{coupleNames.bride}</h1>
+              <h1 className="text-5xl md:text-6xl font-nameFont1 text-primary mb-4">{couple.bride.fullName}</h1>
               <p className="text-4xl font-nameFont1 text-primary mb-4">&</p>
-              <h1 className="text-5xl md:text-6xl font-nameFont1 text-primary">{coupleNames.groom}</h1>
+              <h1 className="text-5xl md:text-6xl font-nameFont1 text-primary">{couple.groom.fullName}</h1>
             </div>
           </div>
 
@@ -67,16 +63,16 @@ export default function BaseTemplate({ data = null, shared = {}, ...props }) {
               <div className="md:hidden mb-6">
                 <img src="/share/bismillah.png" alt="Bismillah" className="w-32 mx-auto mb-4" />
                 <p className="text-primary mb-2">The Wedding Of</p>
-                <h1 className="text-3xl font-nameFont1 text-primary mb-2">{coupleNames.bride} & {coupleNames.groom}</h1>
+                <h1 className="text-3xl font-nameFont1 text-primary mb-2">{couple.bride.fullName} & {couple.groom.fullName}</h1>
               </div>
 
               <div className="flex justify-center mb-4">
-                <img src={heroImage} alt="Couple AI" className="w-2/3 md:w-1/2" />
+                <img src={assets.heroImage} alt="Couple AI" className="w-2/3 md:w-1/2" />
               </div>
 
               <p className="text-primary text-lg mb-4">{formattedDate}</p>
 
-              <Countdown targetDate={new Date(weddingDate)} />
+              <Countdown targetDate={weddingDate} />
 
               <p className="text-primary mt-8">Assalamu&apos;alaikum wr.wb</p>
               <p className="text-primary mt-4">{introText}</p>
@@ -84,11 +80,11 @@ export default function BaseTemplate({ data = null, shared = {}, ...props }) {
 
             <section className="text-center mb-8">
               <div className="flex justify-center mb-4">
-                <img src={brideImage} alt="Bride" className="w-20 md:w-28" />
+                <img src={couple.bride.image} alt="Bride" className="w-20 md:w-28" />
               </div>
-              <h3 className="text-2xl font-nameFont1 text-primary mb-2">{coupleNames.bride}</h3>
+              <h3 className="text-2xl font-nameFont1 text-primary mb-2">{couple.bride.fullName}</h3>
               <p className="text-primary mb-1">Putri Dari</p>
-              <p className="text-primary">{parents.bride}</p>
+              <p className="text-primary">{couple.bride.parents}</p>
             </section>
 
             <section className="text-center mb-8">
@@ -97,11 +93,11 @@ export default function BaseTemplate({ data = null, shared = {}, ...props }) {
 
             <section className="text-center mb-8">
               <div className="flex justify-center mb-4">
-                <img src={groomImage} alt="Groom" className="w-20 md:w-28" />
+                <img src={couple.groom.image} alt="Groom" className="w-20 md:w-28" />
               </div>
-              <h3 className="text-2xl font-nameFont1 text-primary mb-2">{coupleNames.groom}</h3>
+              <h3 className="text-2xl font-nameFont1 text-primary mb-2">{couple.groom.fullName}</h3>
               <p className="text-primary mb-1">Putra Dari</p>
-              <p className="text-primary">{parents.groom}</p>
+              <p className="text-primary">{couple.groom.parents}</p>
             </section>
 
             <section className="mb-8">
@@ -113,11 +109,11 @@ export default function BaseTemplate({ data = null, shared = {}, ...props }) {
                 ))}
 
                 <div className="card-wedding p-0 overflow-hidden">
-                  <iframe src={venueMapSrc} style={{ border: 0, width: '100%', height: '300px' }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                  <iframe src={venue.mapSrc} style={{ border: 0, width: '100%', height: '300px' }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
                 </div>
 
                 <div className="text-center">
-                  <a href={venueLink || '#'} target="_blank" rel="noopener noreferrer" className="btn-location inline-block">
+                  <a href={venue.link || '#'} target="_blank" rel="noopener noreferrer" className="btn-location inline-block">
                     <i className="fas fa-location-dot mr-2"></i>Lihat Lokasi
                   </a>
                 </div>
@@ -125,7 +121,7 @@ export default function BaseTemplate({ data = null, shared = {}, ...props }) {
             </section>
 
             <section>
-              <Gallery />
+              <Gallery images={gallery} />
             </section>
 
             <section className="mt-12 max-w-2xl mx-auto px-4">
@@ -138,14 +134,14 @@ export default function BaseTemplate({ data = null, shared = {}, ...props }) {
 
               <div className="card-wedding text-center max-w-sm mx-auto">
                 <div className="mb-4">
-                  {bankName ? (
-                    <img src={bankName} alt="Bank Logo" className="w-12 mx-auto" />
+                  {gift.bankName ? (
+                    <img src={gift.bankName} alt="Bank Logo" className="w-12 mx-auto" />
                   ) : null}
                 </div>
-                <p className="text-primary mb-2">A/N {bankRecipient || `${coupleNames.bride} & ${coupleNames.groom}`}</p>
+                <p className="text-primary mb-2">A/N {gift.bankRecipient || `${couple.bride.fullName} & ${couple.groom.fullName}`}</p>
                 <p className="text-primary font-semibold">
-                  <span id="textToCopy">{bankAccount}</span>
-                  <button onClick={() => copyToClipboard(bankAccount)} className="ml-3 text-primary hover:text-opacity-70 transition cursor-pointer" title="Copy to clipboard"><i className="fas fa-copy"></i></button>
+                  <span id="textToCopy">{gift.bankAccount}</span>
+                  <button onClick={() => copyToClipboard(gift.bankAccount)} className="ml-3 text-primary hover:text-opacity-70 transition cursor-pointer" title="Copy to clipboard"><i className="fas fa-copy"></i></button>
                 </p>
               </div>
             </section>
@@ -155,7 +151,7 @@ export default function BaseTemplate({ data = null, shared = {}, ...props }) {
               <p className="text-primary mb-4">Wassalamu&apos;alaikum Warahmatullahi Wabarakatuh</p>
               <p className="text-primary mb-2">Kami Yang Berbahagia,</p>
               <p className="text-primary mb-6">Keluarga Besar Kedua Mempelai</p>
-              <h3 className="text-4xl font-nameFont1 text-primary">{coupleNames.bride} & {coupleNames.groom}</h3>
+              <h3 className="text-4xl font-nameFont1 text-primary">{couple.bride.fullName} & {couple.groom.fullName}</h3>
             </section>
 
             <WishForm onSubmit={shared.submitWish} isSubmitting={shared.submitting} />

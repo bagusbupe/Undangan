@@ -11,15 +11,24 @@ export default function Preview() {
 
   const shared = { wishes, loading, submitting, submitWish, getTotalAttendees };
 
-  // Provide minimal props for preview; allow query override in real app
-  const props = {
-    coupleNames: { bride: 'Preview Bride', groom: 'Preview Groom' },
-    weddingDate: new Date(),
-    events: [],
-    gallery: [],
-    bankAccount: '0000000000',
-    audioSrc: '/share/Audio.mp3',
-  };
+  // Read preview overrides from query parameters if provided
+  const searchParams = new URLSearchParams(window.location.search);
+  const overrides = {};
 
-  return <Template {...props} shared={shared} />;
+  const bride = searchParams.get('bride');
+  const groom = searchParams.get('groom');
+  if (bride || groom) {
+    overrides.couple = {
+      bride: { fullName: bride || '' },
+      groom: { fullName: groom || '' },
+    };
+  }
+
+  const dateParam = searchParams.get('date');
+  if (dateParam) {
+    overrides.weddingDate = new Date(dateParam);
+  }
+
+  // If no overrides are provided, the template will render its defaults
+  return <Template {...overrides} shared={shared} />;
 }
