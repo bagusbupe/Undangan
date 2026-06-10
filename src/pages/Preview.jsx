@@ -1,11 +1,13 @@
 import { useParams } from 'react-router-dom';
 import TemplateRegistry from '../templates/TemplateRegistry';
 import { useWishes } from '../hooks/useWishes';
+import { getActiveInvitation } from '../utils/invitationStorage';
 
 export default function Preview() {
   const { id } = useParams();
   const Template = TemplateRegistry.get(id);
-  const { wishes, loading, submitting, submitWish, getTotalAttendees } = useWishes();
+  const invitation = getActiveInvitation();
+  const { wishes, loading, submitting, submitWish, getTotalAttendees } = useWishes(invitation.slug || 'preview');
 
   if (!Template) return <div className="p-8">Template not found: {id}</div>;
 
@@ -29,6 +31,7 @@ export default function Preview() {
     overrides.weddingDate = new Date(dateParam);
   }
 
-  // If no overrides are provided, the template will render its defaults
-  return <Template {...overrides} shared={shared} />;
+  const data = Object.keys(overrides).length > 0 ? { ...invitation.data, ...overrides } : invitation.data;
+
+  return <Template data={data} shared={shared} />;
 }

@@ -9,14 +9,14 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/config';
 
-export function useWishes() {
+export function useWishes(scope = 'default') {
   const [wishes, setWishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   // Real-time listener
   useEffect(() => {
-    const q = query(collection(db, 'wishes'), orderBy('createdAt', 'desc'));
+    const q = query(collection(db, 'invitationWishes', scope, 'wishes'), orderBy('createdAt', 'desc'));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const wishesData = [];
@@ -28,7 +28,7 @@ export function useWishes() {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [scope]);
 
   // Submit wish
   const submitWish = async (name, message, attendance) => {
@@ -42,7 +42,7 @@ export function useWishes() {
 
     setSubmitting(true);
     try {
-      await addDoc(collection(db, 'wishes'), {
+      await addDoc(collection(db, 'invitationWishes', scope, 'wishes'), {
         name: name.trim(),
         message: message.trim(),
         attendance,

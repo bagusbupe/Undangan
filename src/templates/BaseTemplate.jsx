@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Countdown from '../components/Countdown';
 import EventCard from '../components/EventCard';
 import Gallery from '../components/Gallery';
@@ -11,6 +12,7 @@ import { copyToClipboard } from '../utils/clipboard';
 import { normalizeInvitationData } from '../utils/templateData';
 
 export default function BaseTemplate({ data: inputData = null, shared = {}, ...props }) {
+  const [modalOpen, setModalOpen] = useState(true);
   const data = normalizeInvitationData(inputData || props);
 
   const {
@@ -19,12 +21,18 @@ export default function BaseTemplate({ data: inputData = null, shared = {}, ...p
     events,
     gallery,
     venue,
-    gift,
+    gifts,
     assets,
     introText,
   } = data;
 
   const formattedDate = formatWeddingDate(weddingDate);
+  const hasEvents = events.length > 0;
+  const hasVenueMap = Boolean(venue.mapSrc);
+  const hasVenueLink = Boolean(venue.link);
+  const giftList = gifts || [];
+  const hasGift = giftList.some((gift) => gift.bankAccount || gift.bankRecipient || gift.bankName);
+  const hasAudio = Boolean(assets.audioSrc);
 
   return (
     <div className="min-h-screen bg-bg overflow-x-hidden">
@@ -34,17 +42,17 @@ export default function BaseTemplate({ data: inputData = null, shared = {}, ...p
       <div className="bottomFlower1" />
 
       <InvitationModal
-        isOpen={true}
-        onClose={() => { }}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
         onOpen={() => {
           const audio = document.querySelector('audio');
-          if (audio) audio.play();
+          if (audio) audio.play().catch(() => {});
         }}
         couple={couple}
         heroImage={assets.heroImage}
       />
 
-      <AudioButton audioSrc={assets.audioSrc} />
+      {hasAudio && <AudioButton audioSrc={assets.audioSrc} />}
 
       <main className="max-w-6xl mx-auto relative z-0">
         <div className="grid md:grid-cols-5 gap-4 p-4">
@@ -104,19 +112,29 @@ export default function BaseTemplate({ data: inputData = null, shared = {}, ...p
               <h2 className="text-3xl font-nameFont1 text-primary mb-6 text-center">Save Date</h2>
 
               <div className="space-y-4">
-                {events.map((ev) => (
-                  <EventCard key={ev.id} {...ev} />
-                ))}
+                {hasEvents ? (
+                  events.map((ev, index) => (
+                    <EventCard key={ev.id || `${ev.title}-${index}`} {...ev} />
+                  ))
+                ) : (
+                  <div className="card-wedding p-4 text-center text-primary">
+                    Detail acara akan segera diperbarui.
+                  </div>
+                )}
 
-                <div className="card-wedding p-0 overflow-hidden">
-                  <iframe src={venue.mapSrc} style={{ border: 0, width: '100%', height: '300px' }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
-                </div>
+                {hasVenueMap && (
+                  <div className="card-wedding p-0 overflow-hidden">
+                    <iframe src={venue.mapSrc} style={{ border: 0, width: '100%', height: '300px' }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+                  </div>
+                )}
 
-                <div className="text-center">
-                  <a href={venue.link || '#'} target="_blank" rel="noopener noreferrer" className="btn-location inline-block">
+                {hasVenueLink && (
+                  <div className="text-center">
+                    <a href={venue.link} target="_blank" rel="noopener noreferrer" className="btn-location inline-block">
                     <i className="fas fa-location-dot mr-2"></i>Lihat Lokasi
-                  </a>
-                </div>
+                    </a>
+                  </div>
+                )}
               </div>
             </section>
 
@@ -124,7 +142,7 @@ export default function BaseTemplate({ data: inputData = null, shared = {}, ...p
               <Gallery images={gallery} />
             </section>
 
-            <section className="mt-12 max-w-2xl mx-auto px-4">
+            {hasGift && <section className="mt-12 max-w-2xl mx-auto px-4">
               <div className="text-center mb-6">
                 <i className="fas fa-gift text-5xl text-primary mb-4 block"></i>
                 <h2 className="text-3xl font-nameFont1 text-primary mb-4">Wedding Gift</h2>
@@ -132,19 +150,25 @@ export default function BaseTemplate({ data: inputData = null, shared = {}, ...p
 
               <p className="text-primary text-center mb-6">Do&apos;a restu keluarga, sahabat, serta rekan-rekan semua di pernikahan kami sudah sangat cukup sebagai hadiah, tetapi jika memberi merupakan tanda kasih, kami dengan senang hati menerimanya dan tentunya semakin melengkapi kebahagiaan kami.</p>
 
-              <div className="card-wedding text-center max-w-sm mx-auto">
-                <div className="mb-4">
-                  {gift.bankName ? (
-                    <img src={gift.bankName} alt="Bank Logo" className="w-12 mx-auto" />
-                  ) : null}
-                </div>
-                <p className="text-primary mb-2">A/N {gift.bankRecipient || `${couple.bride.fullName} & ${couple.groom.fullName}`}</p>
-                <p className="text-primary font-semibold">
-                  <span id="textToCopy">{gift.bankAccount}</span>
-                  <button onClick={() => copyToClipboard(gift.bankAccount)} className="ml-3 text-primary hover:text-opacity-70 transition cursor-pointer" title="Copy to clipboard"><i className="fas fa-copy"></i></button>
-                </p>
+              <div className="grid grid-cols-1 gap-4 max-w-sm mx-auto">
+                {giftList.map((gift, index) => (
+                  <div key={gift.id || index} className="card-wedding text-center">
+                    <div className="mb-4">
+                      {gift.bankName ? (
+                        <img src={gift.bankName} alt="Bank Logo" className="w-12 mx-auto" />
+                      ) : null}
+                    </div>
+                    <p className="text-primary mb-2">A/N {gift.bankRecipient || `${couple.bride.fullName} & ${couple.groom.fullName}`}</p>
+                    <p className="text-primary font-semibold">
+                      <span>{gift.bankAccount}</span>
+                      {gift.bankAccount && (
+                        <button onClick={() => copyToClipboard(gift.bankAccount)} className="ml-3 text-primary hover:text-opacity-70 transition cursor-pointer" title="Copy to clipboard"><i className="fas fa-copy"></i></button>
+                      )}
+                    </p>
+                  </div>
+                ))}
               </div>
-            </section>
+            </section>}
 
             <section className="mt-12 max-w-2xl mx-auto px-4 text-center">
               <p className="text-primary mb-8">Merupakan suatu kehormatan dan kebahagian bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa.</p>

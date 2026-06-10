@@ -71,11 +71,12 @@ export default function InvitationModal({
             Acara Pernikahan Kami.
           </p>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               onOpen?.();
               onClose();
             }}
-            className="btn-location px-8 py-3 bg-primary text-white rounded-full hover:opacity-90 transition-opacity"
+            className="btn-location px-8 py-3 bg-primary text-white rounded-full hover:opacity-90 transition-opacity cursor-pointer z-50 relative"
           >
             <i className="fas fa-envelope mr-2"></i> Buka Undangan
           </button>

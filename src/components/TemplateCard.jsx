@@ -9,7 +9,6 @@ export default function TemplateCard({ id, title = '', subtitle = '' }) {
         <p className="text-sm text-gray-600 mb-3">{subtitle || 'Elegant wedding invitation'}</p>
         <div className="flex space-x-2">
           <Link to={`/preview/${id}`} className="btn-location inline-block">Preview</Link>
-          <a href={`/?template=${id}`} className="btn-location inline-block">Use</a>
         </div>
       </div>
     </div>
