@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useWishes } from '../hooks/useWishes';
 import TemplateRegistry from '../templates/TemplateRegistry';
-import { getInvitationBySlugRemote } from '../utils/invitationStorage';
+import { getInvitationBySlugRemote, getInvitationTitle } from '../utils/invitationStorage';
 
 export default function InvitationPage() {
   const { slug } = useParams();
@@ -18,6 +18,7 @@ export default function InvitationPage() {
       .then((item) => {
         setInvitation(item);
         setNotFound(!item);
+        document.title = item ? getInvitationTitle(item.data) : 'undanganbagus';
       })
       .finally(() => setLoadingInvitation(false));
   }, [slug]);

@@ -11,6 +11,11 @@ import {
   upsertInvitationRemote,
 } from '../utils/invitationStorage';
 
+const TEMPLATE_LABELS = {
+  simple: 'Simple',
+  'adat-jawa': 'Adat Jawa',
+};
+
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const { admin, logout } = useAdmin();
@@ -33,14 +38,14 @@ export default function AdminDashboard() {
     const base = getDefaultInvitation(createSlug(`undangan-${Date.now()}`));
     const invitation = await upsertInvitationRemote({
       ...base,
-      title: 'Undangan Baru',
     });
     navigate(`/admin/edit/${invitation.slug}`);
   };
 
   const handlePreview = (slug) => {
+    const invitation = invitations.find((item) => item.slug === slug);
     setActiveInvitationSlug(slug);
-    window.open(`/preview/simple`, '_blank', 'noopener,noreferrer');
+    window.open(`/preview/${invitation?.templateId || 'simple'}`, '_blank', 'noopener,noreferrer');
   };
 
   const handleDelete = async (invitation) => {
@@ -92,7 +97,7 @@ export default function AdminDashboard() {
             {invitations.map((invitation) => (
               <div key={invitation.slug} className="border border-gray-200 rounded-lg p-6 hover:shadow-lg transition bg-white">
                 <h3 className="text-lg font-semibold text-primary mb-2">{invitation.title || getInvitationTitle(invitation.data)}</h3>
-                <p className="text-sm text-gray-600 mb-1">Template: simple</p>
+                <p className="text-sm text-gray-600 mb-1">Template: {TEMPLATE_LABELS[invitation.templateId] || invitation.templateId || 'Simple'}</p>
                 <p className="text-sm text-gray-600 mb-4 break-all">/{invitation.slug}</p>
                 <div className="grid grid-cols-1 gap-2">
                   <button

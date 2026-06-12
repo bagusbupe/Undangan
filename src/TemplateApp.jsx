@@ -1,9 +1,10 @@
 import { useWishes } from './hooks/useWishes';
 import TemplateRegistry from './templates/TemplateRegistry';
-import { getActiveInvitation } from './utils/invitationStorage';
+import { getActiveInvitation, getInvitationTitle } from './utils/invitationStorage';
 
 export default function TemplateApp() {
   const invitation = getActiveInvitation();
+  document.title = getInvitationTitle(invitation.data);
   const TemplateComponent = TemplateRegistry.get(invitation.templateId || 'simple');
   const { wishes, loading, submitting, submitWish, getTotalAttendees } = useWishes(invitation.slug || 'default');
 

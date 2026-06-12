@@ -1,9 +1,14 @@
+import { useEffect } from 'react';
 import TemplateRegistry from '../templates/TemplateRegistry';
 import FeatureCard from '../components/FeatureCard';
 import TemplateCard from '../components/TemplateCard';
 
 export default function Landing() {
   const templates = TemplateRegistry.list();
+
+  useEffect(() => {
+    document.title = 'undanganbagus';
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-pink-50 py-16">

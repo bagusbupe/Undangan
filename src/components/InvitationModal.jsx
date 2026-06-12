@@ -5,7 +5,7 @@ export default function InvitationModal({
   onClose,
   onOpen,
   couple,
-  heroImage = '/share/imgAI.png',
+  heroImage = '',
 }) {
   const [guestName, setGuestName] = useState('');
 
@@ -37,14 +37,15 @@ export default function InvitationModal({
     };
   }, [isOpen]);
 
-  const getShortName = (fullName, defaultVal) => {
-    if (!fullName) return defaultVal;
+  const getShortName = (fullName) => {
+    if (!fullName) return '';
     const firstPart = fullName.split(/[\s&]+/)[0];
-    return firstPart || defaultVal;
+    return firstPart || '';
   };
 
-  const brideName = couple?.bride?.shortName || getShortName(couple?.bride?.fullName, 'Lidya');
-  const groomName = couple?.groom?.shortName || getShortName(couple?.groom?.fullName, 'Bagus');
+  const brideName = couple?.bride?.shortName || getShortName(couple?.bride?.fullName);
+  const groomName = couple?.groom?.shortName || getShortName(couple?.groom?.fullName);
+  const coupleTitle = [brideName, groomName].filter(Boolean).join(' & ') || 'Undangan Pernikahan';
 
   if (!isOpen) return null;
 
@@ -55,11 +56,13 @@ export default function InvitationModal({
           <img src="/share/bismillah.png" alt="Bismillah" className="w-1/3 mx-auto mb-4" />
           <p className="text-primary text-lg mb-2">The Wedding Of</p>
           <h2 className="text-3xl md:text-4xl font-nameFont1 text-primary mb-6">
-            {brideName} & {groomName}
+            {coupleTitle}
           </h2>
-          <div className="flex justify-center mb-6">
-            <img src={heroImage} alt="Couple" className="w-3/5 rounded-full" />
-          </div>
+          {heroImage && (
+            <div className="flex justify-center mb-6">
+              <img src={heroImage} alt="Couple" className="w-3/5 rounded-full" />
+            </div>
+          )}
           {guestName && (
             <div className="mb-6 p-4 bg-secondary rounded-lg">
               <p className="text-primary text-sm mb-1">Kepada Yth Bapak/Ibu/Saudara/i</p>

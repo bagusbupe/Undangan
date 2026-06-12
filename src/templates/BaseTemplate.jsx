@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Countdown from '../components/Countdown';
 import EventCard from '../components/EventCard';
 import Gallery from '../components/Gallery';
@@ -10,6 +10,7 @@ import { formatWeddingDate } from '../utils/date';
 import { copyToClipboard } from '../utils/clipboard';
 
 import { normalizeInvitationData } from '../utils/templateData';
+import { getInvitationTitle } from '../utils/invitationStorage';
 
 export default function BaseTemplate({ data: inputData = null, shared = {}, ...props }) {
   const [modalOpen, setModalOpen] = useState(true);
@@ -30,9 +31,15 @@ export default function BaseTemplate({ data: inputData = null, shared = {}, ...p
   const hasEvents = events.length > 0;
   const hasVenueMap = Boolean(venue.mapSrc);
   const hasVenueLink = Boolean(venue.link);
-  const giftList = gifts || [];
+  const giftList = (gifts || []).filter((gift) => gift.bankAccount || gift.bankRecipient || gift.bankName);
   const hasGift = giftList.some((gift) => gift.bankAccount || gift.bankRecipient || gift.bankName);
   const hasAudio = Boolean(assets.audioSrc);
+  const hasHeroImage = Boolean(assets.heroImage);
+  const hasWeddingDate = Boolean(weddingDate && !Number.isNaN(new Date(weddingDate).getTime()));
+
+  useEffect(() => {
+    document.title = getInvitationTitle(data);
+  }, [data]);
 
   return (
     <div className="min-h-screen bg-bg overflow-x-hidden">
@@ -74,21 +81,23 @@ export default function BaseTemplate({ data: inputData = null, shared = {}, ...p
                 <h1 className="text-3xl font-nameFont1 text-primary mb-2">{couple.bride.fullName} & {couple.groom.fullName}</h1>
               </div>
 
-              <div className="flex justify-center mb-4">
-                <img src={assets.heroImage} alt="Couple AI" className="w-2/3 md:w-1/2" />
-              </div>
+              {hasHeroImage && (
+                <div className="flex justify-center mb-4">
+                  <img src={assets.heroImage} alt="Couple" className="w-2/3 md:w-1/2" />
+                </div>
+              )}
 
-              <p className="text-primary text-lg mb-4">{formattedDate}</p>
+              {formattedDate && <p className="text-primary text-lg mb-4">{formattedDate}</p>}
 
-              <Countdown targetDate={weddingDate} />
+              {hasWeddingDate && <Countdown targetDate={weddingDate} />}
 
               <p className="text-primary mt-8">Assalamu&apos;alaikum wr.wb</p>
-              <p className="text-primary mt-4">{introText}</p>
+              {introText && <p className="text-primary mt-4">{introText}</p>}
             </section>
 
             <section className="text-center mb-8">
               <div className="flex justify-center mb-4">
-                <img src={couple.bride.image} alt="Bride" className="w-20 md:w-28" />
+                {couple.bride.image && <img src={couple.bride.image} alt="Bride" className="w-20 md:w-28" />}
               </div>
               <h3 className="text-2xl font-nameFont1 text-primary mb-2">{couple.bride.fullName}</h3>
               <p className="text-primary mb-1">Putri Dari</p>
@@ -101,7 +110,7 @@ export default function BaseTemplate({ data: inputData = null, shared = {}, ...p
 
             <section className="text-center mb-8">
               <div className="flex justify-center mb-4">
-                <img src={couple.groom.image} alt="Groom" className="w-20 md:w-28" />
+                {couple.groom.image && <img src={couple.groom.image} alt="Groom" className="w-20 md:w-28" />}
               </div>
               <h3 className="text-2xl font-nameFont1 text-primary mb-2">{couple.groom.fullName}</h3>
               <p className="text-primary mb-1">Putra Dari</p>

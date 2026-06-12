@@ -23,12 +23,12 @@ export function getInvitationTitle(data = DEFAULT_INVITATION_DATA) {
   return [bride, groom].filter(Boolean).join(' & ') || 'Undangan Baru';
 }
 
-export function getDefaultInvitation(slug = 'bagus-lidya') {
+export function getDefaultInvitation(slug = createSlug(`undangan-${Date.now()}`)) {
   return {
     id: slug,
     slug,
     templateId: 'simple',
-    title: 'Lidya & Bagus',
+    title: '',
     data: normalizeInvitationData(DEFAULT_INVITATION_DATA),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -41,8 +41,8 @@ function serializeInvitation(invitation) {
   return {
     ...invitation,
     id: invitation.slug,
-    templateId: 'simple',
-    title: invitation.title || getInvitationTitle(data),
+    templateId: invitation.templateId || 'simple',
+    title: invitation.title || '',
     data: {
       ...data,
       weddingDate: data.weddingDate instanceof Date ? data.weddingDate.toISOString() : data.weddingDate,
@@ -83,7 +83,7 @@ export function getActiveInvitation() {
 }
 
 export function getActiveInvitationSlug() {
-  return localStorage.getItem(ACTIVE_KEY) || 'bagus-lidya';
+  return localStorage.getItem(ACTIVE_KEY) || '';
 }
 
 export function setActiveInvitationSlug(slug) {
@@ -95,8 +95,8 @@ export function upsertInvitation(invitation) {
   const normalized = {
     ...invitation,
     id: invitation.slug,
-    templateId: 'simple',
-    title: invitation.title || getInvitationTitle(invitation.data),
+    templateId: invitation.templateId || 'simple',
+    title: invitation.title || '',
     data: normalizeInvitationData(invitation.data),
     updatedAt: new Date().toISOString(),
   };
@@ -118,7 +118,7 @@ export function deleteInvitation(slug) {
   saveInvitations(invitations);
 
   if (getActiveInvitationSlug() === slug) {
-    const nextSlug = invitations[0]?.slug || 'bagus-lidya';
+    const nextSlug = invitations[0]?.slug || '';
     setActiveInvitationSlug(nextSlug);
   }
 

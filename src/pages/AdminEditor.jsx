@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAdmin } from '../contexts/AdminContext';
+import TemplateRegistry from '../templates/TemplateRegistry';
 import {
   createSlug,
   getDefaultInvitation,
@@ -32,6 +33,10 @@ const IMAGE_OPTIONS = [
 
 const AUDIO_OPTIONS = ['/share/Audio.mp3'];
 const MAX_UPLOAD_SIZE = 700 * 1024;
+const TEMPLATE_LABELS = {
+  simple: 'Simple',
+  'adat-jawa': 'Adat Jawa',
+};
 
 function getFileName(value) {
   if (!value) return '';
@@ -145,7 +150,36 @@ function toDateTimeLocal(value) {
   if (!value) return '';
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return '';
-  return date.toISOString().slice(0, 16);
+  const pad = (item) => String(item).padStart(2, '0');
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hour = pad(date.getHours());
+  const minute = pad(date.getMinutes());
+  return `${year}-${month}-${day}T${hour}:${minute}`;
+}
+
+function getDatePart(value) {
+  return toDateTimeLocal(value).slice(0, 10);
+}
+
+function getTimePart(value) {
+  return toDateTimeLocal(value).slice(11, 16);
+}
+
+function mergeDateAndTime(datePart, timePart) {
+  if (!datePart && !timePart) return '';
+  const safeDate = datePart || new Date().toISOString().slice(0, 10);
+  const safeTime = timePart || '00:00';
+  return `${safeDate}T${safeTime}`;
+}
+
+function sanitizeSlugInput(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-{2,}/g, '-')
+    .replace(/^-+/, '');
 }
 
 export default function AdminEditor() {
@@ -163,7 +197,7 @@ export default function AdminEditor() {
     }
 
     getInvitationBySlugRemote(invitationId)
-      .then((stored) => setInvitation(stored || getDefaultInvitation(invitationId || 'bagus-lidya')));
+      .then((stored) => setInvitation(stored || getDefaultInvitation(invitationId)));
   }, [admin, invitationId, navigate]);
 
   const updateInvitation = (key, value) => {
@@ -207,7 +241,7 @@ export default function AdminEditor() {
           ...data,
           events: [
             ...data.events,
-            { id: createSlug(`acara-${data.events.length + 1}`), title: 'Acara', date: '', time: '', address: '', fullAddress: '' },
+            { id: createSlug(`acara-${data.events.length + 1}`), title: '', date: '', time: '', address: '', fullAddress: '' },
           ],
         },
       };
@@ -261,7 +295,7 @@ export default function AdminEditor() {
           ...data,
           gifts: [
             ...data.gifts,
-            { id: createSlug(`gift-${data.gifts.length + 1}`), bankAccount: '', bankRecipient: '', bankName: '/share/LogoBCA.png' },
+            { id: createSlug(`gift-${data.gifts.length + 1}`), bankAccount: '', bankRecipient: '', bankName: '' },
           ],
         },
       };
@@ -284,7 +318,7 @@ export default function AdminEditor() {
       ...invitation,
       slug,
       id: slug,
-      title: invitation.title || getInvitationTitle(data),
+      title: invitation.title || '',
       data,
     });
     setInvitation(savedInvitation);
@@ -306,13 +340,17 @@ export default function AdminEditor() {
   const handlePreview = async () => {
     const savedInvitation = await saveCurrentInvitation();
     setActiveInvitationSlug(savedInvitation.slug);
-    window.open('/preview/simple', '_blank', 'noopener,noreferrer');
+    window.open(`/preview/${savedInvitation.templateId || 'simple'}`, '_blank', 'noopener,noreferrer');
   };
 
   if (!invitation) return <div className="p-8 text-center">Loading...</div>;
 
   const data = normalizeInvitationData(invitation.data);
   const galleryText = data.gallery.join('\n');
+  const weddingDatePart = getDatePart(data.weddingDate);
+  const weddingTimePart = getTimePart(data.weddingDate);
+  const templateIds = TemplateRegistry.list();
+  const isJavaTemplate = (invitation.templateId || 'simple') === 'adat-jawa';
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -346,10 +384,51 @@ export default function AdminEditor() {
                 <TextInput value={invitation.title || ''} onChange={(e) => updateInvitation('title', e.target.value)} />
               </Field>
               <Field label="Slug Link">
-                <TextInput value={invitation.slug || ''} onChange={(e) => updateInvitation('slug', createSlug(e.target.value))} />
+                <TextInput value={invitation.slug || ''} onChange={(e) => updateInvitation('slug', sanitizeSlugInput(e.target.value))} />
+              </Field>
+              <Field label="Template">
+                <select
+                  value={invitation.templateId || 'simple'}
+                  onChange={(e) => updateInvitation('templateId', e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary bg-white"
+                >
+                  {templateIds.map((id) => (
+                    <option key={id} value={id}>
+                      {TEMPLATE_LABELS[id] || id}
+                    </option>
+                  ))}
+                </select>
               </Field>
             </div>
           </section>
+
+          {isJavaTemplate && (
+            <section className="mb-8">
+              <h2 className="text-xl font-semibold text-primary mb-4">Tema Adat Jawa</h2>
+              <div className="space-y-4">
+                <Field label="Subjudul Hero">
+                  <TextInput
+                    value={data.theme.javanese.subtitle}
+                    onChange={(e) => updateData('theme.javanese.subtitle', e.target.value)}
+                  />
+                </Field>
+                <Field label="Teks Adat / Seremoni">
+                  <TextArea
+                    rows={4}
+                    value={data.theme.javanese.ceremonialText}
+                    onChange={(e) => updateData('theme.javanese.ceremonialText', e.target.value)}
+                  />
+                </Field>
+                <Field label="Teks Penutup Tema">
+                  <TextArea
+                    rows={3}
+                    value={data.theme.javanese.closingText}
+                    onChange={(e) => updateData('theme.javanese.closingText', e.target.value)}
+                  />
+                </Field>
+              </div>
+            </section>
+          )}
 
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-primary mb-4">Data Pengantin Perempuan</h2>
@@ -390,9 +469,22 @@ export default function AdminEditor() {
           <section className="mb-8">
             <h2 className="text-xl font-semibold text-primary mb-4">Tanggal & Pembuka</h2>
             <div className="space-y-4">
-              <Field label="Tanggal Pernikahan">
-                <TextInput type="datetime-local" value={toDateTimeLocal(data.weddingDate)} onChange={(e) => updateData('weddingDate', e.target.value)} />
-              </Field>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Field label="Tanggal Pernikahan">
+                  <TextInput
+                    type="date"
+                    value={weddingDatePart}
+                    onChange={(e) => updateData('weddingDate', mergeDateAndTime(e.target.value, weddingTimePart))}
+                  />
+                </Field>
+                <Field label="Jam Pernikahan">
+                  <TextInput
+                    type="time"
+                    value={weddingTimePart}
+                    onChange={(e) => updateData('weddingDate', mergeDateAndTime(weddingDatePart, e.target.value))}
+                  />
+                </Field>
+              </div>
               <Field label="Teks Pembuka">
                 <TextArea value={data.introText} onChange={(e) => updateData('introText', e.target.value)} />
               </Field>

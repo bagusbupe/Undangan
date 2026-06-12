@@ -1,20 +1,10 @@
 import { useState } from 'react';
 
-const DEFAULT_IMAGES = [
-  '/share/Image1.jpeg',
-  '/share/Image2.jpeg',
-  '/share/Image3.jpeg',
-  '/share/Image4.jpeg',
-  '/share/Image6.jpeg',
-  '/share/Image7.jpeg',
-  '/share/Image8.jpeg',
-  '/share/Image9.jpeg',
-  '/share/Image10.jpeg',
-];
-
 export default function Gallery({ images }) {
-  const list = images && images.length > 0 ? images : DEFAULT_IMAGES;
+  const list = Array.isArray(images) ? images.filter(Boolean) : [];
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  if (list.length === 0) return null;
 
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? list.length - 1 : prev - 1));

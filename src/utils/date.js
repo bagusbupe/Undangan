@@ -1,5 +1,9 @@
 export function formatWeddingDate(date) {
-  let formatted = date.toLocaleDateString('id-ID', {
+  if (!date) return '';
+  const parsedDate = date instanceof Date ? date : new Date(date);
+  if (Number.isNaN(parsedDate.getTime())) return '';
+
+  let formatted = parsedDate.toLocaleDateString('id-ID', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
@@ -9,6 +13,10 @@ export function formatWeddingDate(date) {
 }
 
 export function calculateCountdown(targetDate) {
+  if (!targetDate || Number.isNaN(new Date(targetDate).getTime())) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
   const currentDate = new Date();
   const timeDifference = targetDate - currentDate;
 
